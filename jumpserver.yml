@@ -1,0 +1,6 @@
+- hosts: jumpserver
+#  gather_facts: false
+  roles:
+    - base
+  vars_files:
+    - "./roles/base/vars/main.yml"

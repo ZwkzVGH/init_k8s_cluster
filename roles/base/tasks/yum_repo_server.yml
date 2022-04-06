@@ -1,0 +1,11 @@
+- name: clear and create repo data
+  file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+  loop:
+    - { path: "{{ repo_path }}", state: "absent" }
+    - { path: "{{ repo_path }}", state: "directory" }
+
+- name: send repo data
+  unarchive:
+    src:

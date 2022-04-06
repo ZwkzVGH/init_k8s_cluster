@@ -1,0 +1,7 @@
+- name: clear and create repo data
+  file:
+    path: "{{ item.a }}"
+    state: "{{ item.b }}"
+  loop:
+    - { a: "/data/test", b: "absent" }
+    - { a: "/data/test", b: "directory" }

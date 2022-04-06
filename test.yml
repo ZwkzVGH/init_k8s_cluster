@@ -1,0 +1,6 @@
+- hosts: test
+#  gather_facts: false
+  roles:
+    - test
+  vars_files:
+    - "./roles/base/vars/main.yml"
