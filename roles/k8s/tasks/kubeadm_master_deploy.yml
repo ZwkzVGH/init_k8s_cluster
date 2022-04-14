@@ -1,13 +1,13 @@
 - name: kubeadm init
-  shell: |
+  shell:
     kubeadm init  \
       --kubernetes-version=v1.18.6 \
       --pod-network-cidr=172.16.0.0/16 \
       --service-cidr=10.96.0.0/12 \
       --apiserver-advertise-address=0.0.0.0 \
       --apiserver-bind-port=6443 \
-      --control-plane-endpoint="{{ urls.kubeadm_url.url }}:6443" \
-      --image-repository={{ urls.registry_url.url }}:5000 \
+      --control-plane-endpoint="{{ urls.kubeadm.url }}":6443 \
+      --image-repository="{{ urls.registry.url }}/kubernetes" \
       --upload-certs
   register: kubeadm_info
 

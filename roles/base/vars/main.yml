@@ -13,6 +13,12 @@ urls:
   registry:
     url: registry.dev.com:5000
     ip: 192.168.47.128
+  kubeadm:
+    url: k8s.dev.com
+    ip: 192.168.47.128
+
+special_roles:
+  k8s_master_1: 192.168.47.128
 
 repo_path: /data/yum-custom
 
