@@ -1,8 +1,0 @@
-- name: deal k8s env
-  include_tasks: env.yml
-  when: k8s is denfined
-
-
-
-
-
