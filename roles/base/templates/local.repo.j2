@@ -1,7 +1,7 @@
 [localrepo]
 name=localrepo
 {% if ansible_default_ipv4.address == urls.repo.ip %}
-baseurl=file:///{{ repo_path }}
+baseurl=file://{{ repo_path }}
 {% else %}
 baseurl=http://{{ urls.repo.url }}:8899
 {% endif %}
@@ -11,7 +11,7 @@ enabled=1
 [updates]
 name=localrepo
 {% if ansible_default_ipv4.address == urls.repo.ip %}
-baseurl=file:///{{ repo_path }}
+baseurl=file://{{ repo_path }}
 {% else %}
 baseurl=http://{{ urls.repo.url }}:8899
 {% endif %}
@@ -21,7 +21,7 @@ enabled=1
 [extras]
 name=localrepo
 {% if ansible_default_ipv4.address == urls.repo.ip %}
-baseurl=file:///{{ repo_path }}
+baseurl=file://{{ repo_path }}
 {% else %}
 baseurl=http://{{ urls.repo.url }}:8899
 {% endif %}
@@ -31,7 +31,7 @@ enabled=1
 [centosplus]
 name=localrepo
 {% if ansible_default_ipv4.address == urls.repo.ip %}
-baseurl=file:///{{ repo_path }}
+baseurl=file://{{ repo_path }}
 {% else %}
 baseurl=http://{{ urls.repo.url }}:8899
 {% endif %}

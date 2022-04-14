@@ -6,46 +6,60 @@
     - { path: "{{ repo_path }}", state: "absent" }
     - { path: "{{ repo_path }}", state: "directory" }
     - { path: "/tmp/yum-custom", state: "absent" }
+    - { path: "/etc/yum.repos.d/bak", state: "absent" }
     - { path: "/etc/yum.repos.d/bak", state: "directory" }
+  tags: create_repo_server
 
 - name: send repo data -1
   copy:
     src: yum-custom
     dest: /tmp/
+  tags: create_repo_server
 
 - name: send repo data -2
   shell:
     cd /tmp/yum-custom && cat yum-custom.* | tar -zxp
+  tags: create_repo_server
 
 - name: send repo data -3
   copy:
-    src: /tmp/yum-custom
+    src: /tmp/yum-custom/yum-custom
     dest: /data/
     remote_src: yes
+  tags: create_repo_server
 
 - name: install createrepo
-  shell: "yum remove -y {{ item }} && yum install -y {{ repo_dir }}/{{ item }}"
+  shell: "yum remove -y {{ item }}"
   loop:
     - "*deltarpm*"
     - "libxml2-python*"
     - "createrepo*"
+  tags: create_repo_server
+
+- name: install createrepo
+  shell:
+    "yum install -y {{ repo_path }}/{{ item }}"
+  loop:
+    - "*deltarpm*"
+    - "libxml2-2.9.1-6.el7_9.6.x86_64.rpm"
+    - "libxml2-python*"
+    - "createrepo*"
+  tags: create_repo_server
 
 - name: create local repo meta
-  command:
-    argv:
-      - createrepo
-      - -p
-      - -o
-      - "{{ repo_dir }}"
-      - "{{ repo_dir }}"
+  shell:
+    "createrepo -p -o {{ repo_path }} {{ repo_path }}"
+  tags: create_repo_server
 
 - name: send simple repo server serice
   template:
     src: custom-repo.service.j2
     dest: /usr/lib/systemd/system/custom-repo.service
+  tags: create_repo_server
 
 - name: start repo simple server
   systemd:
     name: custom-repo
     state: started
     daemon_reload: true
+  tags: create_repo_server

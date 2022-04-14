@@ -41,6 +41,13 @@
 - name: yum repo server
   include_tasks: yum_repo_server.yml
   when: ansible_facts['default_ipv4']['address'] == urls.repo.ip
+  tags: create_repo_server
+
+- name: try remove yum.repos.d/bak
+  file:
+    path: /etc/yum.repos.d/bak
+    state: absent
+  ignore_errors: true
 
 - name: clear yum.repo.d
   shell: 'cd /etc/yum.repos.d/ && mkdir bak && mv ./*.repo bak/'
@@ -54,12 +61,12 @@
 - name: Include ntp server task
   include_tasks: ntp_server.yml
   when: ansible_facts['default_ipv4']['address'] == urls.ntp.ip
-  tag: ntp
+  tags: ntp
 
 - name: Include ntp client task
   include_tasks: ntp_client.yml
   when: ansible_facts['default_ipv4']['address'] != urls.ntp.ip
-  tag: ntp
+  tags: ntp
 
 
 
