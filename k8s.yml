@@ -1,0 +1,6 @@
+- hosts: k8s
+#  gather_facts: false
+  roles:
+    - k8s
+  vars_files:
+    - "./roles/base/vars/main.yml"
