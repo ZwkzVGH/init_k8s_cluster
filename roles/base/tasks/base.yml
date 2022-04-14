@@ -7,7 +7,7 @@
     src: hosts.j2
     dest: /etc/hosts
 
-- name: stop firewalld
+- name: stop firewalld - 1
   service:
     name: firewalld
     state: stopped
@@ -28,34 +28,15 @@
     swapoff -a
 
 - name: close swapoff - 2
-  shell:
-    sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+  replace:
+    path: /etc/fstab
+    regexp: " swap "
+    replace: " s/^\(.*\)$/#\1"
 
 - name: yum repo server
-  include_tasks: yum_repo_server.yml
-  when: ansible_default_ipv4.address == urls.repo.ip
+   include_tasks: yum_repo_server.yml
 
-- name: try remove yum.repos.d/bak
-  file:
-    path: /etc/yum.repos.d/bak
-    state: absent
-  ignore_errors: true
-
-- name: clear yum.repo.d
-  shell: 'mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak'
-
-- name: send repo file
-  template:
-    src: local.repo.j2
-    dest: /etc/yum.repos.d/local.repo
-
-- name: ntp server task
-  include_tasks: ntp_server.yml
-  when: ansible_default_ipv4.address == urls.ntp_server.ip
-
-- name: ntp client task
-  include_tasks: ntp_client.yml
-  when: ansible_default_ipv4.address != urls.ntp_server.ip
+# ntp
 
 
 
