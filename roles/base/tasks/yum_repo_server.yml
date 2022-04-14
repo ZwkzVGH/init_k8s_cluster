@@ -63,3 +63,8 @@
     state: started
     daemon_reload: true
   tags: create_repo_server
+
+- name: clear tmp repo data
+  file:
+    path: /tmp/yum-custom
+    state: absent

@@ -7,16 +7,16 @@
     - "/opt/registry_data"
     - "/tmp/registry"
 
-- name: send registry mirror && registry data
+- name: send registry mirror && registry data - 1
   copy:
     src: registry
     dest: /tmp/
 
-- name: send registry data -1
+- name: send registry mirror && registry data - 2
   shell:
     cd /tmp/registry/ && cat registry_data.* | tar -zxp
 
-- name: send registry data -2
+- name: send registry mirror && registry data - 3
   copy:
     src: /tmp/registry/registry_data
     dest: /opt/
@@ -34,3 +34,8 @@
 - name: start registry container
   shell:
     docker run -d --name registry --restart=always -v /opt/registry_data:/var/lib/registry -p 5000:5000 registry:latest
+
+- name: clear tmp registry data
+  file:
+    path: /tmp/registry
+    state: absent

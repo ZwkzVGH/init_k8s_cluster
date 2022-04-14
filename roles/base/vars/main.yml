@@ -10,6 +10,9 @@ urls:
   ntp:
     url: localntp.com
     ip: 192.168.47.128
+  registry:
+    url: registry.dev.com:5000
+    ip: 192.168.47.128
 
 repo_path: /data/yum-custom
 
