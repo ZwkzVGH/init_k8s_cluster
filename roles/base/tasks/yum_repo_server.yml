@@ -5,7 +5,47 @@
   loop:
     - { path: "{{ repo_path }}", state: "absent" }
     - { path: "{{ repo_path }}", state: "directory" }
+    - { path: "/tmp/yum-custom", state: "absent" }
+    - { path: "/etc/yum.repos.d/bak", state: "directory" }
 
-- name: send repo data
-  unarchive:
-    src:
+- name: send repo data -1
+  copy:
+    src: yum-custom
+    dest: /tmp/
+
+- name: send repo data -2
+  shell:
+    cd /tmp/yum-custom && cat yum-custom.* | tar -zxp
+
+- name: send repo data -3
+  copy:
+    src: /tmp/yum-custom
+    dest: /data/
+    remote_src: yes
+
+- name: install createrepo
+  shell: "yum remove -y {{ item }} && yum install -y {{ repo_dir }}/{{ item }}"
+  loop:
+    - "*deltarpm*"
+    - "libxml2-python*"
+    - "createrepo*"
+
+- name: create local repo meta
+  command:
+    argv:
+      - createrepo
+      - -p
+      - -o
+      - "{{ repo_dir }}"
+      - "{{ repo_dir }}"
+
+- name: send simple repo server serice
+  template:
+    src: custom-repo.service.j2
+    dest: /usr/lib/systemd/system/custom-repo.service
+
+- name: start repo simple server
+  systemd:
+    name: custom-repo
+    state: started
+    daemon_reload: true

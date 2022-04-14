@@ -28,16 +28,38 @@
     swapoff -a
 
 - name: close swapoff - 2
-  replace:
-    path: /etc/fstab
-    regexp: " swap "
-    replace: " s/^\(.*\)$/#\1"
+  shell:
+    sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+- name: clear iptables
+  shell: iptables -F && iptables -X && sudo iptables -F -t nat && sudo iptables -X -t nat
+
+- name: add defalut iptables
+  shell:
+    iptables -P FORWARD ACCEPT
 
 - name: yum repo server
-   include_tasks: yum_repo_server.yml
+  include_tasks: yum_repo_server.yml
+  when: ansible_facts['default_ipv4']['address'] == urls.repo.ip
 
-# ntp
+- name: clear yum.repo.d
+  shell: 'cd /etc/yum.repos.d/ && mkdir bak && mv ./*.repo bak/'
+  ignore_errors: true
 
+- name: send repo file
+  template:
+    src: local.repo.j2
+    dest: "/etc/yum.repos.d/local.repo"
+
+- name: Include ntp server task
+  include_tasks: ntp_server.yml
+  when: ansible_facts['default_ipv4']['address'] == urls.ntp.ip
+  tag: ntp
+
+- name: Include ntp client task
+  include_tasks: ntp_client.yml
+  when: ansible_facts['default_ipv4']['address'] != urls.ntp.ip
+  tag: ntp
 
 
 

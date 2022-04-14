@@ -3,5 +3,13 @@ hostname:
   192.168.47.129: k8s-node-1
   192.168.47.130: k8s-node-2
 
+urls:
+  repo:
+    url: repo.dev.com
+    ip: 192.168.47.128
+  ntp:
+    url: localntp.com
+    ip: 192.168.47.128
+
 repo_path: /data/yum-custom
 
