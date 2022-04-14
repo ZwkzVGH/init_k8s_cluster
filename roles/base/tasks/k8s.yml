@@ -1,0 +1,27 @@
+- name: stop DNS
+  service:
+    name: dnsmasq
+    state: stopped
+    enabled: false
+  ignore_errors: true
+
+- name: load kernel
+  shell:
+    modprobe br_netfilter && modprobe ip_vs
+
+- name: send system parameters conf && ipvs.modules
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: "kubernetes.conf", dest: "/etc/sysctl.d/kubernetes.conf" }
+    - { src: "ipvs.modules", dest: "/etc/sysconfig/modules/ipvs.modules" }
+
+- name: apply system conf
+  shell:
+    sysctl -p /etc/sysctl.d/kubernetes.conf
+
+- name: start ipvs
+  shell:
+    chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/modules/ipvs.modules && lsmod | grep -e ip_vs -e nf_conntrack_ipv4
+

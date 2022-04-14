@@ -1,0 +1,14 @@
+- name: deploy ntp client
+  yum:
+    name: ntpdate
+    state: present
+    enablerepo: localrepo
+
+- name: client synchronize
+  shell: /usr/sbin/ntpdate `/usr/sbin/ntpdate  localntp.com; /sbin/hwclock -w`; /sbin/hwclock -w
+
+- name: add in cron
+  cron:
+    name: "a job for ntpdate"
+    special_time: daily
+    job: "/usr/sbin/ntpdate  localntp.com; /sbin/hwclock -w"

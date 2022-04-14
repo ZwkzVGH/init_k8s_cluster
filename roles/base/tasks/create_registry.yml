@@ -1,0 +1,36 @@
+- name: try to remove registry data path
+  file:
+    path: "{{ item }}"
+    state: absent
+  ignore_errors: true
+  loop:
+    - "/opt/registry_data"
+    - "/tmp/registry"
+
+- name: send registry mirror && registry data
+  copy:
+    src: registry
+    dest: /tmp/
+
+- name: send registry data -1
+  shell:
+    cd /tmp/registry/ && cat registry_data.* | tar -zxp
+
+- name: send registry data -2
+  copy:
+    src: /tmp/registry/registry_data
+    dest: /opt/
+    remote_src: yes
+
+- name: load registry mirror
+  shell:
+    docker load -i /tmp/registry/registry_latest.tar
+
+- name: try to remove registry container
+  shell:
+    docker rm -f registry
+  ignore_errors: true
+
+- name: start registry container
+  shell:
+    docker run -d --name registry --restart=always -v /opt/registry_data:/var/lib/registry -p 5000:5000 registry:latest

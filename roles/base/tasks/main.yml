@@ -1,0 +1,11 @@
+- name: base env
+  include_tasks: base.yml
+  when: base is defined
+
+- name: install docker
+  include_tasks: docker.yml
+  when: docker is defined
+
+- name: k8s env
+  include_tasks: k8s.yml
+  when: k8s is defined

@@ -1,0 +1,63 @@
+- name: set hostname
+  hostname:
+    name: "{{ hostname[ ansible_facts[ 'default_ipv4' ] [ 'address' ] ] }}"
+
+- name: add hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: stop firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: stop selinux - 1
+  shell:
+    setenforce 0
+
+- name: stop selinux - 2
+  replace:
+    path: /etc/selinux/config
+    regexp: "SELINUX=.*"
+    replace: "SELINUX=disabled"
+
+- name: close swapoff - 1
+  shell:
+    swapoff -a
+
+- name: close swapoff - 2
+  shell:
+    sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+- name: yum repo server
+  include_tasks: yum_repo_server.yml
+  when: ansible_default_ipv4.address == urls.repo.ip
+
+- name: try remove yum.repos.d/bak
+  file:
+    path: /etc/yum.repos.d/bak
+    state: absent
+  ignore_errors: true
+
+- name: clear yum.repo.d
+  shell: 'mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak'
+
+- name: send repo file
+  template:
+    src: local.repo.j2
+    dest: /etc/yum.repos.d/local.repo
+
+- name: ntp server task
+  include_tasks: ntp_server.yml
+  when: ansible_default_ipv4.address == urls.ntp_server.ip
+
+- name: ntp client task
+  include_tasks: ntp_client.yml
+  when: ansible_default_ipv4.address != urls.ntp_server.ip
+
+
+
+
+

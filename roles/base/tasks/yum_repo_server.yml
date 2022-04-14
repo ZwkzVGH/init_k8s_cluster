@@ -1,0 +1,66 @@
+- name: clear and create repo data
+  file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+  loop:
+    - { path: "{{ repo_path }}", state: "absent" }
+    - { path: "{{ repo_path }}", state: "directory" }
+    - { path: "/opt/yum-custom", state: "absent" }
+
+- name: send repo data -1
+  copy:
+    src: yum-custom/
+    dest: /opt/yum-custom/
+
+- name: send repo data -2
+  shell:
+    cd /opt/yum-custom && cat yum-custom* | tar -zxv
+
+- name: send repo data -3
+  copy:
+    src: /opt/yum-custom/yum-custom
+    dest: /data/
+    remote_src: yes
+
+- name: install createrepo -1
+  shell:
+    "yum remove -y {{ item }}"
+  loop:
+    - "yum-utils*"
+    - "createrepo*"
+    - "yum-plugin-priorities*"
+    - "*deltarpm*"
+    - "libxml2-python*"
+
+- name: install createrepo -2
+  shell:
+    "yum install -y {{ repo_path }}/{{ item }}"
+  loop:
+    - "yum-utils-1.1.31-54.el7_8.noarch.rpm"
+    - "createrepo-0.9.9-28.el7.noarch.rpm"
+    - "yum-plugin-priorities*"
+    - "*deltarpm*"
+    - "libxml2-python*"
+
+- name: install createrepo -2
+  shell:
+    "yumdownloader --resolve --destdir={{ repo_path }} httpd"
+  ignore_errors: true
+
+- name: create repo
+  shell:
+    "createrepo -p -o {{ repo_path }} {{ repo_path }}"
+
+- name: send system service
+  template:
+    src: custom-repo.service.j2
+    path: /etc/systemd/system/custom-repo.service
+
+- name: start custom-repo service
+  service:
+    name: custom-repo
+    state: start
+    enabled: true
+
+
+

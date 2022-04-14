@@ -1,0 +1,26 @@
+hostname:
+  192.168.47.128: k8s-master-1
+  192.168.47.129: k8s-node-1
+  192.168.47.130: k8s-node-2
+
+
+urls:
+    repo:
+        url: repo.dev.com
+        ip: 192.168.47.128
+    ntp_server:
+        url: localntp.com
+        ip: 192.168.47.128
+    registry:
+        url: registry.dev.com:5000
+        ip: 192.168.47.128
+    kubeadm:
+      url: k8s.dev.com
+      ip: 192.168.47.128
+
+special_roles:
+  k8s_master_1: 192.168.47.128
+
+
+repo_path: /data/yum-custom
+

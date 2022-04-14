@@ -1,0 +1,12 @@
+[Unit]
+Description=repo server through python simple http server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{ repo_path }}
+ExecStart=/usr/bin/python -m SimpleHTTPServer 8899
+ExecStop=/bin/kill $MAINPID
+
+[Install]
+WantedBy=multi-user.target

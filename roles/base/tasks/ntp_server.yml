@@ -1,0 +1,24 @@
+- name: deploy ntp server
+  yum:
+    name: "{{ item }}"
+    state: present
+    enablerepo: localrepo
+  loop:
+      - ntp
+      - ntpdate
+
+- name: copy ntp conf
+  copy:
+    src: ntp.conf
+    dest: "/etc/ntp.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: start ntp server
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+
+
