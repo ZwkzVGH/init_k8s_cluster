@@ -1,3 +1,2 @@
 - name: install kubernets
   include_tasks: kubernets.yml
-  when: k8s is defined

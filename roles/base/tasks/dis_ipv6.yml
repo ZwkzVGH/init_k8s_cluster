@@ -1,0 +1,34 @@
+- name: Temporarily disable ipv6
+  shell:
+    echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+  ignore_errors: true
+
+- name: disable ipv6 forever - 1.1
+  shell:
+    echo 'net.ipv6.conf.all.disable_ipv6=1' >> /etc/sysctl.conf
+
+- name: disable ipv6 forever - 1.2
+  shell:
+    sysctl -p /etc/sysctl.
+  ignore_errors: true
+
+- name: disable ipv6 forever - 2.1
+  shell:
+    echo 'GRUB_CMDLINE_LINUX="xxxxx ipv6.disable=1"' >> /etc/default/grub
+
+- name: disable ipv6 forever - 2.2
+  shell:
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+
+- name: warning
+  debug:
+    msg: "The machine is about to restart"
+
+- name: the countdown 30s
+  wait_for:
+    timeout: 30
+
+- name: reboot
+  shell:
+    reboot
+

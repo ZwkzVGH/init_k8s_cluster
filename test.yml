@@ -4,4 +4,3 @@
     - test
   vars_files:
     - "./roles/base/vars/main.yml"
-aa

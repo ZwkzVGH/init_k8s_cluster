@@ -1,13 +1,13 @@
-#- name: yum install docker-ce
-#  yum:
-#    name: docker-ce
-#    state: present
-#
-#- name: start docker-ce
-#  service:
-#    name: docker
-#    state: started
-#    enabled: true
+- name: yum install docker-ce
+  yum:
+    name: docker-ce
+    state: present
+
+- name: start docker-ce
+  service:
+    name: docker
+    state: started
+    enabled: true
 
 - name: send docker daemon
   template:

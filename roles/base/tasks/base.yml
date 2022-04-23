@@ -1,6 +1,6 @@
 - name: set hostname
   hostname:
-    name: "{{ hostname[ ansible_facts[ 'default_ipv4' ] [ 'address' ] ] }}"
+    name: "{{ hostname[ansible_facts['default_ipv4'] ['address']] }}"
 
 - name: add hosts
   template:
@@ -16,6 +16,7 @@
 - name: stop selinux - 1
   shell:
     setenforce 0
+  ignore_errors: true
 
 - name: stop selinux - 2
   replace:

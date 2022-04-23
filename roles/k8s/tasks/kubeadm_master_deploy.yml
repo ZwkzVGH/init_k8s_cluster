@@ -7,7 +7,7 @@
       --apiserver-advertise-address=0.0.0.0 \
       --apiserver-bind-port=6443 \
       --control-plane-endpoint="{{ urls.kubeadm.url }}":6443 \
-      --image-repository="{{ urls.registry.url }}/kubernetes" \
+      --image-repository="{{ urls.registry.url }}:{{ urls.registry.port }}/kubernetes" \
       --upload-certs
   register: kubeadm_info
 

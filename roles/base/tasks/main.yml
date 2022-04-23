@@ -2,6 +2,10 @@
   include_tasks: base.yml
   when: base is defined
 
+- name: disable ipv6
+  include_tasks: dis_ipv6.yml
+  when: dis is defined
+
 - name: k8s env
   include_tasks: k8s.yml
   when: k8s is defined

@@ -1,23 +1,23 @@
 [all:vars]
 ansible_ssh_user=root
 ansible_ssh_port=22
-ansible_ssh_pass=123456
+ansible_ssh_pass=1qaz2wsx!
 
 [jumpserver]
-192.168.47.128
+10.118.1.30
 
 [k8s]
-192.168.47.128
-192.168.47.129
-192.168.47.130
+10.118.1.30
+10.118.1.31
+10.118.1.32
 
 [all]
-192.168.47.128
-192.168.47.129
-192.168.47.130
+10.118.1.30
+10.118.1.31
+10.118.1.32
 
 [test]
-192.168.47.128
+10.118.1.30
 
 # send_pub_keys
 #$ ansible test -m authorized_key -a "user=root key='{{ lookup('file', '/root/.ssh/id_rsa.pub') }}'"

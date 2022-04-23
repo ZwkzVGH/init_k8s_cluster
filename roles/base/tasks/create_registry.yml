@@ -33,7 +33,7 @@
 
 - name: start registry container
   shell:
-    docker run -d --name registry --restart=always -v /opt/registry_data:/var/lib/registry -p 5000:5000 registry:latest
+    "docker run -d --name registry --restart=always -v /opt/registry_data:/var/lib/registry -p {{ urls.registry.port }}:5000 registry:latest"
 
 - name: clear tmp registry data
   file:

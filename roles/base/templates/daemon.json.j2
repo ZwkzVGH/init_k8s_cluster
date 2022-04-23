@@ -1,7 +1,7 @@
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
   "data-root": "/home/docker",
-  "insecure-registries":["k8s.gcr.io","gcr.io","quay.io","harbor.io","{{ urls.registry.url }}"],
+  "insecure-registries":["k8s.gcr.io","gcr.io","quay.io","harbor.io","{{ urls.registry.url }}:{{ urls.registry.port }}"],
   "registry-mirrors": [],
   "log-driver": "json-file",
   "log-opts": {
